@@ -12,21 +12,82 @@ let max = 9;
 let guessesLeft = 3;
 
 //TODO: Make random value
-let winningNumber = 2;
+let winningNumber = getRandomNum();
 
 
 //UI elements
 const UIgame = document.querySelector('#game');
-const minNum = document.querySelector('.min-num');
-const maxNum = document.querySelector('.max-num');
-const guessButton = document.querySelector('#guess-btn')
-const message = document.querySelector('.message')
+const UIminNum = document.querySelector('.min-num');
+const UImaxNum = document.querySelector('.max-num');
+const UIguessButton = document.querySelector('#guess-btn')
+const UIguessInput = document.querySelector('#guess-input')
+const UImessage = document.querySelector('.message')
 
 // Assign UI min and max
-minNum.textContent = min;
-maxNum.textContent = max;
+UIminNum.textContent = min;
+UImaxNum.textContent = max;
+
+// Play again event listener
+UIgame.addEventListener('mousedown', function(e) {
+    if(e.target.className === 'play-again') {
+        window.location.reload();
+    }
+})
+
 
 // Listen for a guess
-guessButton.addEventListener('click', function() {
-    console.log(guessInput.value)
+UIguessButton.addEventListener('click', function() {
+    let guess = parseInt(UIguessInput.value);
+    if (guess === NaN || guess < min || guess > max) {
+        setMessage(`Please enter a number between ${min} and ${max}`, 'red');
+    }
+    checkGuess(guess);
+    
 });
+
+function setMessage(message, color) {
+    UImessage.textContent = message;
+    UImessage.style.color = color;
+}
+
+function checkGuess (guess) {
+    if (guess === winningNumber) {
+        setWinElementStyles();
+        setUIGuessButtonValue();
+    } else {
+        checkForLoss();
+    }
+}
+
+function setWinElementStyles() {
+    UIguessInput.disabled = true;
+    UIguessInput.style.borderColor = 'green';
+    setMessage(`You guessed correctly! You win!`, 'green');
+}
+
+function checkForLoss() {
+    guessesLeft = guessesLeft - 1;
+    if (guessesLeft <= 0) { 
+        setLoseElementStyles();
+    } else {
+        setMessage(`${UIguessInput.value} was not correct! You have ${guessesLeft} guesses left...`);
+        UIguessInput.value = '';
+    }
+}
+
+function setLoseElementStyles() {
+    UIguessInput.disabled = true;
+    UIguessInput.style.borderColor = 'red';    
+    setUIGuessButtonValue();
+    setMessage(`You are out of guesses! You have lost the game...the correct number was ${winningNumber}`, 'red'); 
+}
+
+function setUIGuessButtonValue() {
+    UIguessButton.value = 'Play Again';
+    UIguessButton.className += 'play-again';
+}
+
+function getRandomNum() {
+    num = parseInt(Math.random() * (max - min + 1) + min);
+    return num;
+}
