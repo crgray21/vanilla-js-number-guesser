@@ -7,8 +7,8 @@ Game Function:
 - Let the player choose to play again
 */
 
-let min = 1;
-let max = 9;
+let min = 15;
+let max = 20;
 let guessesLeft = 3;
 
 //TODO: Make random value
@@ -88,6 +88,6 @@ function setUIGuessButtonValue() {
 }
 
 function getRandomNum() {
-    num = parseInt(Math.random() * (max - min + 1) + min);
+    num = Math.floor(Math.random() * (max - min + 1) + min);
     return num;
 }
